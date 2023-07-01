@@ -15,7 +15,6 @@ server.add_route("/", index_handler)
 # Print IP Info
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect('Radhakul', 'Ihapwics123$')
 print(wlan.ifconfig())
 
 
