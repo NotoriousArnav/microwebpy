@@ -23,7 +23,6 @@ class Response:
         for key, value in self.headers.items():
             response += "{}: {}\r\n".format(key, value)
         response += "\r\n"
-        print(response, self.body, sep='\n')
         sock.sendall(response.encode('utf-8'))
         sock.sendall(self.body)
 
@@ -40,6 +39,7 @@ class HTTPServer:
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.middleware = []
         self.routes = {}
 
     def add_route(self, path, handler):
@@ -76,10 +76,12 @@ class HTTPServer:
 
     def handle_request(self, request):
         request = request.decode("utf-8")
-        print(request)
         method, path, version = request.split('\r\n')[0].split(" ")
         #method, path, _, _, _ = request.split("\r\n", 4)
-        print(f"{method=}\t{path=}\t{version=}")
+
+        for middleware in self.middleware:
+            middleware(request)
+
         if path in self.routes:
             handler = self.routes[path]
             response = handler(method, path)
@@ -93,4 +95,3 @@ class HTTPServer:
         response.set_status(404)
         response.set_body(b"404 Not Found")
         return response
-
