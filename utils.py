@@ -20,3 +20,8 @@ def parse_headers(request):
                 r[key.strip()] = value.strip()
     
     return r
+
+def parse_request(request):
+    headers = parse_headers(request)
+    _, body = str(request+'\n').split('\n\n')
+    return headers, body

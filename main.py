@@ -7,6 +7,12 @@ def index_handler(method, path, **kwargs):
     response.set_json_body({"message": "Welcome to the index page!"})
     return response
 
+def header_check(method, path, middleware_data):
+    response = JSONResponse()
+    response.set_json_body({
+        'headers': middleware_data['base_middleware']
+    })
+
 # Create server instance
 server = HTTPServer("0.0.0.0", 8080)
 

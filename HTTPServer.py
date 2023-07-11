@@ -1,6 +1,7 @@
 import socket
 import select
 import json
+import utils
 
 class Response:
     def __init__(self):
@@ -81,9 +82,12 @@ class HTTPServer:
         method, path, version = request.split('\r\n')[0].split(" ")
         #method, path, _, _, _ = request.split("\r\n", 4)
 
+        request_data = utils.parse_request(request)
+
         middleware_data = {}
 
-        
+        for middleware in self.middleware:
+            middleware_data[middleware.import_name] = middleware(request_data)
 
         if path in self.routes:
             handler = self.routes[path]
