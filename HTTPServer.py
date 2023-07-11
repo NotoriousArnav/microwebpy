@@ -70,7 +70,9 @@ class HTTPServer:
                             sock.close()
                             inputs.remove(sock)
                     except Exception as e:
-                        print("Exception:", e)
+                        print("Exception:")
+                        print(e)
+                        return e
                         sock.close()
                         inputs.remove(sock)
 
@@ -79,12 +81,13 @@ class HTTPServer:
         method, path, version = request.split('\r\n')[0].split(" ")
         #method, path, _, _, _ = request.split("\r\n", 4)
 
-        for middleware in self.middleware:
-            middleware(request)
+        middleware_data = {}
+
+        
 
         if path in self.routes:
             handler = self.routes[path]
-            response = handler(method, path)
+            response = handler(method, path, middleware_data=middleware_data)
         else:
             response = self.default_handler()
 
