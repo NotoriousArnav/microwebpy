@@ -81,6 +81,7 @@ class HTTPServer:
         request = request.decode("utf-8")
         method, path, version = request.split('\r\n')[0].split(" ")
         #method, path, _, _, _ = request.split("\r\n", 4)
+        print(f'{method} {path} {version}')
 
         request_data = utils.parse_request(request)
 
